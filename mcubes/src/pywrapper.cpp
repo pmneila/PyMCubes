@@ -96,16 +96,3 @@ PyObject* marching_cubes(PyArrayObject* arr, double isovalue)
     
     return res;
 }
-
-void* extract_pyarray(PyObject* x)
-{
-    return PyObject_TypeCheck(x, &PyArray_Type) ? x : 0;
-}
-
-struct PyArrayObject_to_python
-{
-    static PyObject* convert(const PyArrayObject& obj)
-    {
-        return (PyObject*)&obj;
-    }
-};
