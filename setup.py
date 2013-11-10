@@ -35,10 +35,8 @@ setup(name="PyMCubes",
         "Operating System :: OS Independent",
         "Programming Language :: C++",
         "Programming Language :: Python",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Multimedia :: Graphics :: 3D Modeling",
         "Topic :: Scientific/Engineering :: Image Recognition",
-        "Topic :: Scientific/Engineering :: Computer Vision",
-        "Topic :: Scientific/Engineering :: Mathematics"
     ],
     packages=["mcubes"],
     ext_modules=mcubes_module
