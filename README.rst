@@ -1,7 +1,7 @@
 
-========================================================
-PyMCubes - Marching cubes (and related tools) for Python
-========================================================
+========
+PyMCubes
+========
 
 PyMCubes is an implementation of the marching cubes algorithm to extract
 isosurfaces from volumetric data. The current implementation only accepts
