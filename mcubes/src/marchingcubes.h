@@ -3,7 +3,6 @@
 #define _MARCHING_CUBES_H
 
 #include <vector>
-#include <iostream>
 
 namespace mc
 {
@@ -29,6 +28,9 @@ void marching_cubes(const vector3& lower, const vector3& upper,
     
     typedef typeof(lower[0]) coord_type;
     
+    // numx, numy and numz are the numbers of evaluations in each direction
+    --numx; --numy; --numz;
+    
     coord_type dx = (upper[0] - lower[0])/(coord_type)(numx);
     coord_type dy = (upper[1] - lower[1])/(coord_type)(numy);
     coord_type dz = (upper[2] - lower[2])/(coord_type)(numz);
@@ -40,18 +42,21 @@ void marching_cubes(const vector3& lower, const vector3& upper,
     for(int i=0; i<numx; ++i)
     {
         coord_type x = lower[0] + dx*i;
+        coord_type x_dx = lower[0] + dx*(i+1);
         for(int j=0; j<numy; ++j)
         {
             coord_type y = lower[1] + dy*j;
+            coord_type y_dy = lower[1] + dy*(j+1);
             for(int k=0; k<numz; ++k)
             {
                 coord_type z = lower[2] + dz*k;
+                coord_type z_dz = lower[2] + dz*(k+1);
                 
                 double v[8];
-                v[0] = f(x,y,z); v[1] = f(x+dx,y,z);
-                v[2] = f(x+dx,y+dy,z); v[3] = f(x, y+dy, z);
-                v[4] = f(x,y,z+dz); v[5] = f(x+dx,y,z+dz);
-                v[6] = f(x+dx,y+dy,z+dz); v[7] = f(x, y+dy, z+dz);
+                v[0] = f(x,y,z); v[1] = f(x_dx,y,z);
+                v[2] = f(x_dx,y_dy,z); v[3] = f(x, y_dy, z);
+                v[4] = f(x,y,z_dz); v[5] = f(x_dx,y,z_dz);
+                v[6] = f(x_dx,y_dy,z_dz); v[7] = f(x, y_dy, z_dz);
                 
                 unsigned int cubeindex = 0;
                 for(int m=0; m<8; ++m)
@@ -59,25 +64,26 @@ void marching_cubes(const vector3& lower, const vector3& upper,
                         cubeindex |= 1<<m;
                 
                 // Generate vertices AVOIDING DUPLICATES.
+                
                 int edges = edge_table[cubeindex];
                 std::vector<int> indices(12, -1);
                 if(edges & 0x040)
                 {
                     indices[6] = vertices.size() / 3;
                     shared_indices[i*yz3 + j*z3 + k*3 + 0] = indices[6];
-                    mc_add_vertex(x+dx, y+dy, z+dz, x, 0, v[6], v[7], isovalue, &vertices);
+                    mc_add_vertex(x_dx, y_dy, z_dz, x, 0, v[6], v[7], isovalue, &vertices);
                 }
                 if(edges & 0x020)
                 {
                     indices[5] = vertices.size() / 3;
                     shared_indices[i*yz3 + j*z3 + k*3 + 1] = indices[5];
-                    mc_add_vertex(x+dx, y, z+dz, y+dy, 1, v[5], v[6], isovalue, &vertices);
+                    mc_add_vertex(x_dx, y, z_dz, y_dy, 1, v[5], v[6], isovalue, &vertices);
                 }
                 if(edges & 0x400)
                 {
                     indices[10] = vertices.size() / 3;
                     shared_indices[i*yz3 + j*z3 + k*3 + 2] = indices[10];                    
-                    mc_add_vertex(x+dx, y+dx, z, z+dz, 2, v[2], v[6], isovalue, &vertices);
+                    mc_add_vertex(x_dx, y+dx, z, z_dz, 2, v[2], v[6], isovalue, &vertices);
                 }
                 
                 if(edges & 0x001)
@@ -85,87 +91,87 @@ void marching_cubes(const vector3& lower, const vector3& upper,
                     if(j == 0 || k == 0)
                     {
                       indices[0] = vertices.size() / 3;
-                      mc_add_vertex(x, y, z, x+dx, 0, v[0], v[1], isovalue, &vertices);
+                      mc_add_vertex(x, y, z, x_dx, 0, v[0], v[1], isovalue, &vertices);
                     }
                     else
                         indices[0] = shared_indices[i*yz3 + (j-1)*z3 + (k-1)*3 + 0];
-              }
-              if(edges & 0x002)
-              {
+                }
+                if(edges & 0x002)
+                {
                     if(k == 0)
                     {
                         indices[1] = vertices.size() / 3;
-                        mc_add_vertex(x+dx, y, z, y+dy, 1, v[1], v[2], isovalue, &vertices);
+                        mc_add_vertex(x_dx, y, z, y_dy, 1, v[1], v[2], isovalue, &vertices);
                     }
                     else
                         indices[1] = shared_indices[i*yz3 + j*z3 + (k-1)*3 + 1];
-              }
-              if(edges & 0x004)
-              {
+                }
+                if(edges & 0x004)
+                {
                     if(k == 0)
                     {
                         indices[2] = vertices.size() / 3;
-                        mc_add_vertex(x+dx, y+dy, z, x, 0, v[2], v[3], isovalue, &vertices);
+                        mc_add_vertex(x_dx, y_dy, z, x, 0, v[2], v[3], isovalue, &vertices);
                     }
                     else
                         indices[2] = shared_indices[i*yz3 + j*z3 + (k-1)*3 + 0];
-              }
-              if(edges & 0x008)
-              {
+                }
+                if(edges & 0x008)
+                {
                     if(i == 0 || k == 0)
                     {
                         indices[3] = vertices.size() / 3;
-                        mc_add_vertex(x, y+dy, z, y, 1, v[3], v[0], isovalue, &vertices);
+                        mc_add_vertex(x, y_dy, z, y, 1, v[3], v[0], isovalue, &vertices);
                     }
                     else
                         indices[3] = shared_indices[(i-1)*yz3 + j*z3 + (k-1)*3 + 1];
-              }
-              if(edges & 0x010)
-              {
+                }
+                if(edges & 0x010)
+                {
                     if(j == 0)
                     {
                         indices[4] = vertices.size() / 3;
-                        mc_add_vertex(x, y, z+dz, x+dx, 0, v[4], v[5], isovalue, &vertices);
+                        mc_add_vertex(x, y, z_dz, x_dx, 0, v[4], v[5], isovalue, &vertices);
                     }
                     else
                         indices[4] = shared_indices[i*yz3 + (j-1)*z3 + k*3 + 0];
-              }
-              if(edges & 0x080)
-              {
+                }
+                if(edges & 0x080)
+                {
                     if(i == 0)
                     {
                         indices[7] = vertices.size() / 3;
-                        mc_add_vertex(x, y+dy, z+dz, y, 1, v[7], v[4], isovalue, &vertices);
+                        mc_add_vertex(x, y_dy, z_dz, y, 1, v[7], v[4], isovalue, &vertices);
                     }
                     else
                         indices[7] = shared_indices[(i-1)*yz3 + j*z3 + k*3 + 1];
-              }
-              if(edges & 0x100)
-              {
+                }
+                if(edges & 0x100)
+                {
                     if(i == 0 || j == 0)
                     {
                         indices[8] = vertices.size() / 3;
-                        mc_add_vertex(x, y, z, z+dz, 2, v[0], v[4], isovalue, &vertices);
+                        mc_add_vertex(x, y, z, z_dz, 2, v[0], v[4], isovalue, &vertices);
                     }
                     else
                         indices[8] = shared_indices[(i-1)*yz3 + (j-1)*z3 + k*3 + 2];
-              }
-              if(edges & 0x200)
-              {
+                }
+                if(edges & 0x200)
+                {
                     if(j == 0)
                     {
                         indices[9] = vertices.size() / 3;
-                        mc_add_vertex(x+dx, y, z, z+dz, 2, v[1], v[5], isovalue, &vertices);
+                        mc_add_vertex(x_dx, y, z, z_dz, 2, v[1], v[5], isovalue, &vertices);
                     }
                     else
                         indices[9] = shared_indices[i*yz3 + (j-1)*z3 + k*3 + 2];
-              }
-              if(edges & 0x800)
-              {
+                }
+                if(edges & 0x800)
+                {
                     if(i == 0)
                     {
                         indices[11] = vertices.size() / 3;
-                        mc_add_vertex(x, y+dy, z, z+dz, 2, v[3], v[7], isovalue, &vertices);
+                        mc_add_vertex(x, y_dy, z, z_dz, 2, v[3], v[7], isovalue, &vertices);
                     }
                     else
                         indices[11] = shared_indices[(i-1)*yz3 + j*z3 + k*3 + 2];
