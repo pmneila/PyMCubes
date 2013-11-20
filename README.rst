@@ -1,4 +1,3 @@
-
 ========
 PyMCubes
 ========
@@ -40,7 +39,7 @@ to represent the volume instead of a NumPy array::
   >>> import mcubes
   
   # Create the volume
-  >>> lambda x, y, z: x**2 + y**2 + z**2
+  >>> f = lambda x, y, z: x**2 + y**2 + z**2
   
   # Extract the 16-isosurface
   >>> vertices, triangles = mcubes.marching_cubes_func((-10,-10,-10), (10,10,10),
