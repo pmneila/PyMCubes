@@ -12,6 +12,21 @@ PyMCubes also provides a function to export the results of the marching cubes as
 COLLADA ``(.dae)`` files. This requires the
 `PyCollada <https://github.com/pycollada/pycollada>`_ library.
 
+Installation
+============
+
+Just as any standard Python package, clone or download the project
+and run::
+
+  $ cd path/to/PyMCubes
+  $ python setup.py build
+  $ python setup.py install
+
+If you do not have write permission on the directory of Python packages,
+install with the ``--user`` option::
+
+  $ python setup.py install --user
+
 Example
 =======
 
