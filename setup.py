@@ -1,26 +1,35 @@
 # -*- encoding: utf-8 -*-
 
-from distutils.core import setup
-#from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
 from Cython.Build import cythonize
 
 import numpy
+from distutils.extension import Extension
 
 # Get the version number.
 numpy_include_dir = numpy.get_include()
 
-mcubes_module = cythonize('mcubes/src/_mcubes.pyx')
-
-mcubes_module[0].include_dirs.append(numpy_include_dir)
-mcubes_module[0].sources.append("mcubes/src/pywrapper.cpp")
-mcubes_module[0].sources.append("mcubes/src/marchingcubes.cpp")
+mcubes_module = Extension(
+    "mcubes._mcubes",
+    [
+        "mcubes/src/_mcubes.pyx",
+        "mcubes/src/pywrapper.cpp",
+        "mcubes/src/marchingcubes.cpp"
+    ],
+    language="c++",
+    include_dirs=[numpy_include_dir]
+)
 
 setup(name="PyMCubes",
-    version="0.0.1",
+    version="0.0.2",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
-    author_email="p.mneila@upm.es",
-    url="",
+    author_email="pablo.marquezneila@epfl.ch",
+    url="https://github.com/pmneila/PyMCubes",
     license="GPL",
     long_description="""
     Marching cubes for Python
@@ -39,5 +48,7 @@ setup(name="PyMCubes",
         "Topic :: Scientific/Engineering :: Image Recognition",
     ],
     packages=["mcubes"],
-    ext_modules=mcubes_module
-    )
+    ext_modules=cythonize(mcubes_module),
+    requires=['numpy', 'Cython', 'PyCollada'],
+    setup_requires=['numpy', 'Cython']
+)

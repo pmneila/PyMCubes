@@ -1,4 +1,6 @@
 
+import numpy as np
+
 def export_mesh(vertices, triangles, filename, mesh_name="mcubes_mesh"):
     """
     Exports a mesh in the COLLADA (.dae) format.
@@ -16,7 +18,7 @@ def export_mesh(vertices, triangles, filename, mesh_name="mcubes_mesh"):
     input_list = collada.source.InputList()
     input_list.addInput(0, 'VERTEX', "#verts-array")
     
-    triset = geom.createTriangleSet(triangles, input_list, "")
+    triset = geom.createTriangleSet(np.copy(triangles), input_list, "")
     geom.primitives.append(triset)
     mesh.geometries.append(geom)
     
