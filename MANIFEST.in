@@ -1,0 +1,12 @@
+include mcubes/*.py
+
+include mcubes/src/*.h
+include mcubes/src/*.cpp
+include mcubes/src/_mcubes.pyx
+exclude mcubes/src/_mcubes.cpp
+
+include examples/*.py
+
+include setup.py
+include README.rst
+include LICENSE
