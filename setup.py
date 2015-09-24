@@ -21,11 +21,12 @@ mcubes_module = Extension(
         "mcubes/src/marchingcubes.cpp"
     ],
     language="c++",
+    extra_compile_args=['-std=c++11'],
     include_dirs=[numpy_include_dir]
 )
 
 setup(name="PyMCubes",
-    version="0.0.2",
+    version="0.0.3",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquezneila@epfl.ch",

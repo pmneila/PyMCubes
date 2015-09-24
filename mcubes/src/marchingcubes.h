@@ -26,14 +26,14 @@ void marching_cubes(const vector3& lower, const vector3& upper,
 {
     using namespace private_;
     
-    typedef typeof(lower[0]) coord_type;
+    typedef decltype(lower[0]) coord_type;
     
     // numx, numy and numz are the numbers of evaluations in each direction
     --numx; --numy; --numz;
     
-    coord_type dx = (upper[0] - lower[0])/(coord_type)(numx);
-    coord_type dy = (upper[1] - lower[1])/(coord_type)(numy);
-    coord_type dz = (upper[2] - lower[2])/(coord_type)(numz);
+    coord_type dx = (upper[0] - lower[0])/static_cast<coord_type>(numx);
+    coord_type dy = (upper[1] - lower[1])/static_cast<coord_type>(numy);
+    coord_type dz = (upper[2] - lower[2])/static_cast<coord_type>(numz);
     
     int* shared_indices = new int[numx*numy*numz*3];
     const int z3 = numz*3;
