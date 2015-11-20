@@ -2,6 +2,7 @@
 #ifndef _MARCHING_CUBES_H
 #define _MARCHING_CUBES_H
 
+#include <stddef.h>
 #include <vector>
 
 namespace mc
