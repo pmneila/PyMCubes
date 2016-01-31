@@ -11,10 +11,10 @@ def export_obj(vertices, triangles, filename):
         lines = []
         
         for v in vertices:
-            lines.append("v {}".format(" ".join([str(p) for p in v]))
+            lines.append("v {}".format(" ".join([str(p) for p in v])))
             
         for f in triangles:
-            lines.append("f {}".format(" ".join([str(p) for p in v]))
+            lines.append("f {}".format(" ".join([str(p) for p in v])))
         
         fh.write("\n".join(lines))
 
