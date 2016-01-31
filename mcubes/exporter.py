@@ -1,6 +1,24 @@
 
 import numpy as np
 
+
+def export_obj(vertices, triangles, filename):
+    """
+    Exports a mesh in the (.obj) format.
+    """
+    
+    with open(filename, 'w') as fh:
+        lines = []
+        
+        for v in vertices:
+            lines.append("v {}".format(" ".join([str(p) for p in v]))
+            
+        for f in triangles:
+            lines.append("f {}".format(" ".join([str(p) for p in v]))
+        
+        fh.write("\n".join(lines))
+
+
 def export_mesh(vertices, triangles, filename, mesh_name="mcubes_mesh"):
     """
     Exports a mesh in the COLLADA (.dae) format.
