@@ -14,7 +14,7 @@ def export_obj(vertices, triangles, filename):
             lines.append("v {}".format(" ".join([str(p) for p in v])))
             
         for f in triangles:
-            lines.append("f {}".format(" ".join([str(p) for p in v])))
+            lines.append("f {}".format(" ".join([str(p) for p in f])))
         
         fh.write("\n".join(lines))
 
