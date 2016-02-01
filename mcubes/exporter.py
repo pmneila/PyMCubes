@@ -8,16 +8,12 @@ def export_obj(vertices, triangles, filename):
     """
     
     with open(filename, 'w') as fh:
-        lines = []
         
         for v in vertices:
-            lines.append("v {}".format(" ".join([str(p) for p in v])))
+            fh.write("v {} {} {}\n".format(*v))
             
         for f in triangles:
-            lines.append("f {}".format(" ".join([str(p) for p in f])))
-        
-        fh.write("\n".join(lines))
-
+            fh.write("f {} {} {}\n".format(*(f + 1)))
 
 def export_mesh(vertices, triangles, filename, mesh_name="mcubes_mesh"):
     """

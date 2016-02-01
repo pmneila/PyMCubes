@@ -26,7 +26,7 @@ mcubes_module = Extension(
 )
 
 setup(name="PyMCubes",
-    version="0.0.4",
+    version="0.0.6",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquezneila@epfl.ch",
