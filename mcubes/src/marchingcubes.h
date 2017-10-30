@@ -42,19 +42,19 @@ void marching_cubes(const vector3& lower, const vector3& upper,
     
     for(int i=0; i<numx; ++i)
     {
-        coord_type x = lower[0] + dx*i;
-        coord_type x_dx = lower[0] + dx*(i+1);
+        coord_type x = lower[0] + dx*i + dx/2;
+        coord_type x_dx = lower[0] + dx*(i+1) + dx/2;
         const int i_mod_2 = i % 2;
         const int i_mod_2_inv = (i_mod_2 ? 0 : 1); 
 
         for(int j=0; j<numy; ++j)
         {
-            coord_type y = lower[1] + dy*j;
-            coord_type y_dy = lower[1] + dy*(j+1);
+            coord_type y = lower[1] + dy*j + dy/2;
+            coord_type y_dy = lower[1] + dy*(j+1) + dy/2;
             for(int k=0; k<numz; ++k)
             {
-                coord_type z = lower[2] + dz*k;
-                coord_type z_dz = lower[2] + dz*(k+1);
+                coord_type z = lower[2] + dz*k + dz/2;
+                coord_type z_dz = lower[2] + dz*(k+1) + dz/2;
                 
                 double v[8];
                 v[0] = f(x,y,z); v[1] = f(x_dx,y,z);

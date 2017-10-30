@@ -94,8 +94,8 @@ PyObject* marching_cubes(PyArrayObject* arr, double isovalue)
     
     // Prepare data.
     npy_intp* shape = PyArray_DIMS(arr);
-    long lower[3] = {0,0,0};
-    long upper[3] = {shape[0]-1, shape[1]-1, shape[2]-1};
+    double lower[3] = {0,0,0};
+    double upper[3] = {shape[0]-1, shape[1]-1, shape[2]-1};
     long numx = upper[0] - lower[0] + 1;
     long numy = upper[1] - lower[1] + 1;
     long numz = upper[2] - lower[2] + 1;
@@ -103,7 +103,7 @@ PyObject* marching_cubes(PyArrayObject* arr, double isovalue)
     std::vector<size_t> polygons;
     
     // Marching cubes.
-    mc::marching_cubes<long>(lower, upper, numx, numy, numz, PyArrayToCFunc(arr), isovalue,
+    mc::marching_cubes<double>(lower, upper, numx, numy, numz, PyArrayToCFunc(arr), isovalue,
                         vertices, polygons);
     
     // Copy the result to two Python ndarrays.
