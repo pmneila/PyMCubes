@@ -28,24 +28,24 @@ void marching_cubes(const vector3& lower, const vector3& upper,
     using namespace private_;
 
     // typedef decltype(lower[0]) coord_type;
-    
+
     // numx, numy and numz are the numbers of evaluations in each direction
     --numx; --numy; --numz;
-    
+
     coord_type dx = (upper[0] - lower[0])/static_cast<coord_type>(numx);
     coord_type dy = (upper[1] - lower[1])/static_cast<coord_type>(numy);
     coord_type dz = (upper[2] - lower[2])/static_cast<coord_type>(numz);
-    
+
     size_t* shared_indices = new size_t[2*numy*numz*3];
     const int z3 = numz*3;
     const int yz3 = numy*z3;
-    
+
     for(int i=0; i<numx; ++i)
     {
         coord_type x = lower[0] + dx*i + dx/2;
         coord_type x_dx = lower[0] + dx*(i+1) + dx/2;
         const int i_mod_2 = i % 2;
-        const int i_mod_2_inv = (i_mod_2 ? 0 : 1); 
+        const int i_mod_2_inv = (i_mod_2 ? 0 : 1);
 
         for(int j=0; j<numy; ++j)
         {
@@ -55,20 +55,20 @@ void marching_cubes(const vector3& lower, const vector3& upper,
             {
                 coord_type z = lower[2] + dz*k + dz/2;
                 coord_type z_dz = lower[2] + dz*(k+1) + dz/2;
-                
+
                 double v[8];
                 v[0] = f(x,y,z); v[1] = f(x_dx,y,z);
                 v[2] = f(x_dx,y_dy,z); v[3] = f(x, y_dy, z);
                 v[4] = f(x,y,z_dz); v[5] = f(x_dx,y,z_dz);
                 v[6] = f(x_dx,y_dy,z_dz); v[7] = f(x, y_dy, z_dz);
-                
+
                 unsigned int cubeindex = 0;
                 for(int m=0; m<8; ++m)
                     if(v[m] <= isovalue)
                         cubeindex |= 1<<m;
-                
+
                 // Generate vertices AVOIDING DUPLICATES.
-                
+
                 int edges = edge_table[cubeindex];
                 std::vector<size_t> indices(12, -1);
                 if(edges & 0x040)
@@ -86,10 +86,10 @@ void marching_cubes(const vector3& lower, const vector3& upper,
                 if(edges & 0x400)
                 {
                     indices[10] = vertices.size() / 3;
-                    shared_indices[i_mod_2*yz3 + j*z3 + k*3 + 2] = indices[10];                    
+                    shared_indices[i_mod_2*yz3 + j*z3 + k*3 + 2] = indices[10];
                     mc_add_vertex(x_dx, y+dx, z, z_dz, 2, v[2], v[6], isovalue, &vertices);
                 }
-                
+
                 if(edges & 0x001)
                 {
                     if(j == 0 || k == 0)
@@ -180,7 +180,7 @@ void marching_cubes(const vector3& lower, const vector3& upper,
                     else
                         indices[11] = shared_indices[i_mod_2_inv*yz3 + j*z3 + k*3 + 2];
                 }
-                
+
                 int tri;
                 int* triangle_table_ptr = triangle_table[cubeindex];
                 for(int m=0; tri = triangle_table_ptr[m], tri != -1; ++m)
@@ -188,7 +188,7 @@ void marching_cubes(const vector3& lower, const vector3& upper,
             }
         }
     }
-    
+
     delete [] shared_indices;
 }
 
