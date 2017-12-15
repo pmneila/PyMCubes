@@ -8,6 +8,8 @@ three-dimensional NumPy array or as a Python function ``f(x, y, z)``. The first
 option is much faster, but it requires more memory and becomes unfeasible for
 very large volumes.
 
+**In this branch, the marching cubes algorithm uses the voxel centers to extract isosurfaces.**
+
 PyMCubes also provides a function to export the results of the marching cubes as
 COLLADA ``(.dae)`` files. This requires the
 `PyCollada <https://github.com/pycollada/pycollada>`_ library.
