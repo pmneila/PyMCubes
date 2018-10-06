@@ -1,32 +1,60 @@
 # -*- encoding: utf-8 -*-
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
 
-from Cython.Build import cythonize
+from setuptools.extension import Extension
 
-import numpy
-from distutils.extension import Extension
 
-# Get the version number.
-numpy_include_dir = numpy.get_include()
+class lazy_cythonize(list):
+    """
+    Lazy evaluate extension definition, to allow correct requirements install.
+    """
+    
+    def __init__(self, callback):
+        super().__init__()
+        self._list, self.callback = None, callback
+    
+    def c_list(self):
+        if self._list is None:
+            self._list = self.callback()
+        
+        return self._list
+    
+    def __iter__(self):
+        for e in self.c_list():
+            yield e
+    
+    def __getitem__(self, ii):
+        return self.c_list()[ii]
+    
+    def __len__(self):
+        return len(self.c_list())
 
-mcubes_module = Extension(
-    "mcubes._mcubes",
-    [
-        "mcubes/src/_mcubes.pyx",
-        "mcubes/src/pywrapper.cpp",
-        "mcubes/src/marchingcubes.cpp"
-    ],
-    language="c++",
-    extra_compile_args=['-std=c++11'],
-    include_dirs=[numpy_include_dir]
-)
 
-setup(name="PyMCubes",
-    version="0.0.6",
+def extensions():
+    
+    from Cython.Build import cythonize
+    import numpy
+    
+    numpy_include_dir = numpy.get_include()
+    
+    mcubes_module = Extension(
+        "mcubes._mcubes",
+        [
+            "mcubes/src/_mcubes.pyx",
+            "mcubes/src/pywrapper.cpp",
+            "mcubes/src/marchingcubes.cpp"
+        ],
+        language="c++",
+        extra_compile_args=['-std=c++11'],
+        include_dirs=[numpy_include_dir]
+    )
+    
+    return cythonize([mcubes_module])
+
+setup(
+    name="PyMCubes",
+    version="0.0.7",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquezneila@epfl.ch",
@@ -49,7 +77,7 @@ setup(name="PyMCubes",
         "Topic :: Scientific/Engineering :: Image Recognition",
     ],
     packages=["mcubes"],
-    ext_modules=cythonize(mcubes_module),
+    ext_modules=lazy_cythonize(extensions),
     requires=['numpy', 'Cython', 'PyCollada'],
     setup_requires=['numpy', 'Cython']
 )

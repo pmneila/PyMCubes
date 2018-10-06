@@ -8,7 +8,7 @@
 struct PythonToCFunc
 {
     PyObject* func;
-    PythonToCFunc(PyObject* func) {this->func = func;}
+    PythonToCFunc(PyObject* func) : func(func) {}
     double operator()(double x, double y, double z)
     {
         PyObject* res = PyObject_CallFunction(func, "(d,d,d)", x, y, z); // py::extract<double>(func(x,y,z));

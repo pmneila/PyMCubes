@@ -1,3 +1,5 @@
+*.dae
+_mcubes.cpp
 *.py[cod]
 
 # C extensions

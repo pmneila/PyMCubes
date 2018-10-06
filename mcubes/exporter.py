@@ -15,6 +15,7 @@ def export_obj(vertices, triangles, filename):
         for f in triangles:
             fh.write("f {} {} {}\n".format(*(f + 1)))
 
+
 def export_mesh(vertices, triangles, filename, mesh_name="mcubes_mesh"):
     """
     Exports a mesh in the COLLADA (.dae) format.
