@@ -79,7 +79,7 @@ PyObject* marching_cubes_func(PyObject* lower, PyObject* upper,
 struct PyArrayToCFunc
 {
     PyArrayObject* arr;
-    PyArrayToCFunc(PyArrayObject* arr) {this->arr = arr;}
+    PyArrayToCFunc(PyArrayObject* arr) : arr(arr) {}
     double operator()(int x, int y, int z)
     {
         npy_intp c[3] = {x,y,z};
