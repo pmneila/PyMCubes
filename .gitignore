@@ -3,6 +3,8 @@ _mcubes.cpp
 *.py[cod]
 .vscode
 
+.vscode
+
 # C extensions
 *.so
 
