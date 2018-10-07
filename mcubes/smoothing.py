@@ -1,58 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Implementation of the smoothing method from
-
-"Surface Extraction from Binary Volumes with Higher-Order Smoothness"
-Victor Lempitsky, CVPR10
-
-2D example
-----------
-
-Create a binary embedding function. For example:
-
->>> import numpy as np
->>> X,Y = np.mgrid[:50, :50]
->>> dist = np.sqrt((X-25)**2 + (Y-25)**2)
->>> u = (dist - 15) < 0
-
-u is a binary function with 1 inside a circle and 0 outside it.
-Smooth the 0.5 levelset surface with:
-
->>> import mcubes
->>> usmooth = mcubes.smooth(u, 200, verbose=True)
-
-You can compare the results plotting the 0.5-levelset of u
-and the 0-levelset of usmooth:
-
->>> contour(u, [0.5], colors='b')
->>> contour(u, [0], colors='r')
->>> axis('image')
-
-3D example
-----------
-
-First, create a binary embedding function. For example,
-a sphere:
-
->>> X,Y,Z = np.mgrid[:100,:100,:100]
->>> dist = np.sqrt((X-50)**2 + (Y-50)**2 + (Z-50)**2)
->>> u = dist-30 < 0
-
-u is a binary function with 1 inside the sphere and 0 outside.
-Smooth the 0.5 levelset surface with
-
->>> import mcubes
->>> usmooth = mcubes.smooth(u, 300, verbose=True)
-
-You can compare the original volume and the result by extracting
-the 0.5-levelset of u and the 0-levelset of usmooth with marching cubes:
-
->>> vertices, triangles = mcubes.marching_cubes(u, 0.5)
->>> mcubes.export_mesh(vertices, triangles, 'sphere1.dae', 'Sphere_nosmooth')
->>> vertices, triangles = mcubes.marching_cubes(usmooth, 0)
->>> mcubes.export_mesh(vertices, triangles, 'sphere2.dae', 'Sphere_smooth')
-
+Utilities for smoothing the 0.5 level-set of binary arrays.
 """
 
 __author__ = "Pablo Márquez Neila"
@@ -241,10 +190,10 @@ def jacobi(Q, x, l, u, num_iters = 10, w=0.5):
 
 def smooth_constrained(binary_array, num_iters=250, band_radius=4):
     """
-    Smooth the zero level-set of a binary array.
-    
-    The smoothing is performed in a narrow band near the zero
-    level-set.
+    Implementation of the smoothing method from
+
+    "Surface Extraction from Binary Volumes with Higher-Order Smoothness"
+    Victor Lempitsky, CVPR10
     """
     
     # # Compute the distance map, the border and the band.
