@@ -1,6 +1,7 @@
 *.dae
 _mcubes.cpp
 *.py[cod]
+.vscode
 
 # C extensions
 *.so

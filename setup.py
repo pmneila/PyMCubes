@@ -11,7 +11,7 @@ class lazy_cythonize(list):
     """
     
     def __init__(self, callback):
-        super().__init__()
+        super(lazy_cythonize, self).__init__()
         self._list, self.callback = None, callback
     
     def c_list(self):
@@ -54,10 +54,10 @@ def extensions():
 
 setup(
     name="PyMCubes",
-    version="0.0.8",
+    version="0.0.9",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
-    author_email="pablo.marquezneila@epfl.ch",
+    author_email="pablo.marquez@artorg.unibe.ch",
     url="https://github.com/pmneila/PyMCubes",
     license="BSD 3-clause",
     long_description="""
