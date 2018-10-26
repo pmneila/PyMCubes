@@ -40,3 +40,4 @@ def test_export():
     
     mcubes.export_obj(vertices, triangles, "output/test.obj")
     mcubes.export_off(vertices, triangles, "output/test.off")
+    mcubes.export_mesh(vertices, triangles, "output/test.dae")
