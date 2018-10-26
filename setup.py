@@ -11,7 +11,7 @@ class lazy_cythonize(list):
     """
     
     def __init__(self, callback):
-        super().__init__()
+        super(lazy_cythonize, self).__init__()
         self._list, self.callback = None, callback
     
     def c_list(self):
