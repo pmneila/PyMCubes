@@ -35,7 +35,7 @@ before_script:
   - mkdir output
 
 script:
-  - nosetests -v --exe --with-xunit --with-coverage --cover-package=maxflow
+  - nosetests -v --exe --with-xunit --with-coverage --cover-package=mcubes
 
 after_success:
   - python setup.py install
