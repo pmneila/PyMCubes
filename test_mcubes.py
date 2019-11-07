@@ -15,7 +15,7 @@ def test_empty():
 
 def test_sphere():
     x, y, z = np.mgrid[:100, :100, :100]
-    u = (z - 50)**2 + (y - 50)**2 + (z - 50)**2 - 25**2
+    u = (x - 50)**2 + (y - 50)**2 + (z - 50)**2 - 25**2
     
     def func(x, y, z):
         return u[int(x), int(y), int(z)]

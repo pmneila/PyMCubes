@@ -46,8 +46,16 @@ def extensions():
             "mcubes/src/marchingcubes.cpp"
         ],
         language="c++",
-        extra_compile_args=['-std=c++11'],
-        include_dirs=[numpy_include_dir]
+        # extra_compile_args=['-std=c++11', '-Wall'],
+        extra_compile_args=['-std=c++11', '-O0', '-g', '-Wall'],
+        include_dirs=[numpy_include_dir],
+        depends=[
+            "mcubes/src/marchingcubes.h",
+            "mcubes/src/pyarray_symbol.h",
+            "mcubes/src/pyarraymodule.h",
+            "mcubes/src/pywrapper.h"
+        ],
+        undef_macros = [ "NDEBUG" ]
     )
     
     return cythonize([mcubes_module])
