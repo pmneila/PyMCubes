@@ -56,16 +56,20 @@ void marching_cubes(const vector3& lower, const vector3& upper,
         {
             coord_type y = lower[1] + dy*j;
             coord_type y_dy = lower[1] + dy*(j+1);
+
+            double v[8];
+            v[4] = f(x, y, lower[2]); v[5] = f(x_dx, y, lower[2]);
+            v[6] = f(x_dx, y_dy, lower[2]); v[7] = f(x, y_dy, lower[2]);
+
             for(int k=0; k<numz; ++k)
             {
                 coord_type z = lower[2] + dz*k;
                 coord_type z_dz = lower[2] + dz*(k+1);
                 
-                double v[8];
-                v[0] = f(x,y,z); v[1] = f(x_dx,y,z);
-                v[2] = f(x_dx,y_dy,z); v[3] = f(x, y_dy, z);
-                v[4] = f(x,y,z_dz); v[5] = f(x_dx,y,z_dz);
-                v[6] = f(x_dx,y_dy,z_dz); v[7] = f(x, y_dy, z_dz);
+                v[0] = v[4]; v[1] = v[5];
+                v[2] = v[6]; v[3] = v[7];
+                v[4] = f(x, y, z_dz); v[5] = f(x_dx, y, z_dz);
+                v[6] = f(x_dx, y_dy, z_dz); v[7] = f(x, y_dy, z_dz);
                 
                 unsigned int cubeindex = 0;
                 for(int m=0; m<8; ++m)
