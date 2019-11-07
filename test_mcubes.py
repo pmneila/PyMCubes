@@ -32,6 +32,15 @@ def test_sphere():
     assert_array_equal(triangles1, triangles2)
 
 
+def test_no_duplicates():
+    def sphere(x, y, z):
+        return np.sqrt((x - 4)**2 + (y - 4)**2 + (z - 4)**2) - 4
+    
+    vertices, _ = mcubes.marching_cubes_func((2, 2, 2), (9, 9, 9), 20, 20, 20, sphere, 0)
+
+    assert len(vertices) == len(np.unique(vertices, axis=0))
+
+
 def test_export():
     
     u = np.zeros((10, 10, 10))

@@ -79,111 +79,117 @@ void marching_cubes(const vector3& lower, const vector3& upper,
                 if(edges & 0x040)
                 {
                     indices[6] = vertices.size() / 3;
-                    shared_indices_x[i_mod_2*numyz + j*numz + k] = indices[6];
+                    shared_indices_x[i_mod_2_inv*numyz + (j+1)*numz + (k+1)] = indices[6];
                     mc_add_vertex(x_dx, y_dy, z_dz, x, 0, v[6], v[7], isovalue, &vertices);
                 }
                 if(edges & 0x020)
                 {
                     indices[5] = vertices.size() / 3;
-                    shared_indices_y[i_mod_2*numyz + j*numz + k] = indices[5];
+                    shared_indices_y[i_mod_2_inv*numyz + (j+1)*numz + (k+1)] = indices[5];
                     mc_add_vertex(x_dx, y, z_dz, y_dy, 1, v[5], v[6], isovalue, &vertices);
                 }
                 if(edges & 0x400)
                 {
                     indices[10] = vertices.size() / 3;
-                    shared_indices_z[i_mod_2*numyz + j*numz + k] = indices[10];                    
+                    shared_indices_z[i_mod_2_inv*numyz + (j+1)*numz + (k+1)] = indices[10];
                     mc_add_vertex(x_dx, y+dx, z, z_dz, 2, v[2], v[6], isovalue, &vertices);
                 }
                 
                 if(edges & 0x001)
                 {
-                    if(j == 0 || k == 0)
+                    if(j == 0 && k == 0)
                     {
                         indices[0] = vertices.size() / 3;
                         mc_add_vertex(x, y, z, x_dx, 0, v[0], v[1], isovalue, &vertices);
                     }
                     else
-                        indices[0] = shared_indices_x[i_mod_2*numyz + (j-1)*numz + (k-1)];
+                        indices[0] = shared_indices_x[i_mod_2_inv*numyz + j*numz + k];
                 }
                 if(edges & 0x002)
                 {
                     if(k == 0)
                     {
                         indices[1] = vertices.size() / 3;
+                        shared_indices_y[i_mod_2_inv*numyz + (j+1)*numz + k] = indices[1];
                         mc_add_vertex(x_dx, y, z, y_dy, 1, v[1], v[2], isovalue, &vertices);
                     }
                     else
-                        indices[1] = shared_indices_y[i_mod_2*numyz + j*numz + (k-1)];
+                        indices[1] = shared_indices_y[i_mod_2_inv*numyz + (j+1)*numz + k];
                 }
                 if(edges & 0x004)
                 {
                     if(k == 0)
                     {
                         indices[2] = vertices.size() / 3;
+                        shared_indices_x[i_mod_2_inv*numyz + (j+1)*numz + k] = indices[2];
                         mc_add_vertex(x_dx, y_dy, z, x, 0, v[2], v[3], isovalue, &vertices);
                     }
                     else
-                        indices[2] = shared_indices_x[i_mod_2*numyz + j*numz + (k-1)];
+                        indices[2] = shared_indices_x[i_mod_2_inv*numyz + (j+1)*numz + k];
                 }
                 if(edges & 0x008)
                 {
-                    if(i == 0 || k == 0)
+                    if(i == 0 && k == 0)
                     {
                         indices[3] = vertices.size() / 3;
                         mc_add_vertex(x, y_dy, z, y, 1, v[3], v[0], isovalue, &vertices);
                     }
                     else
-                        indices[3] = shared_indices_y[i_mod_2_inv*numyz + j*numz + (k-1)];
+                        indices[3] = shared_indices_y[i_mod_2*numyz + (j+1)*numz + k];
                 }
                 if(edges & 0x010)
                 {
                     if(j == 0)
                     {
                         indices[4] = vertices.size() / 3;
+                        shared_indices_x[i_mod_2_inv*numyz + j*numz + (k+1)] = indices[4];
                         mc_add_vertex(x, y, z_dz, x_dx, 0, v[4], v[5], isovalue, &vertices);
                     }
                     else
-                        indices[4] = shared_indices_x[i_mod_2*numyz + (j-1)*numz + k];
+                        indices[4] = shared_indices_x[i_mod_2_inv*numyz + j*numz + (k+1)];
                 }
                 if(edges & 0x080)
                 {
                     if(i == 0)
                     {
                         indices[7] = vertices.size() / 3;
+                        shared_indices_y[i_mod_2*numyz + (j+1)*numz + (k+1)] = indices[7];
                         mc_add_vertex(x, y_dy, z_dz, y, 1, v[7], v[4], isovalue, &vertices);
                     }
                     else
-                        indices[7] = shared_indices_y[i_mod_2_inv*numyz + j*numz + k];
+                        indices[7] = shared_indices_y[i_mod_2*numyz + (j+1)*numz + (k+1)];
                 }
                 if(edges & 0x100)
                 {
-                    if(i == 0 || j == 0)
+                    if(i == 0 && j == 0)
                     {
                         indices[8] = vertices.size() / 3;
                         mc_add_vertex(x, y, z, z_dz, 2, v[0], v[4], isovalue, &vertices);
                     }
                     else
-                        indices[8] = shared_indices_z[i_mod_2_inv*numyz + (j-1)*numz + k];
+                        indices[8] = shared_indices_z[i_mod_2*numyz + j*numz + (k+1)];
                 }
                 if(edges & 0x200)
                 {
                     if(j == 0)
                     {
                         indices[9] = vertices.size() / 3;
+                        shared_indices_z[i_mod_2_inv*numyz + j*numz + (k+1)] = indices[9];
                         mc_add_vertex(x_dx, y, z, z_dz, 2, v[1], v[5], isovalue, &vertices);
                     }
                     else
-                        indices[9] = shared_indices_z[i_mod_2*numyz + (j-1)*numz + k];
+                        indices[9] = shared_indices_z[i_mod_2_inv*numyz + j*numz + (k+1)];
                 }
                 if(edges & 0x800)
                 {
                     if(i == 0)
                     {
                         indices[11] = vertices.size() / 3;
+                        shared_indices_z[i_mod_2*numyz + (j+1)*numz + (k+1)] = indices[11];
                         mc_add_vertex(x, y_dy, z, z_dz, 2, v[3], v[7], isovalue, &vertices);
                     }
                     else
-                        indices[11] = shared_indices_z[i_mod_2_inv*numyz + j*numz + k];
+                        indices[11] = shared_indices_z[i_mod_2*numyz + (j+1)*numz + (k+1)];
                 }
                 
                 int tri;
