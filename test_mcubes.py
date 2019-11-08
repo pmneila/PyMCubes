@@ -1,4 +1,6 @@
 
+import pytest
+
 import numpy as np
 from numpy.testing import assert_array_equal, assert_allclose
 
@@ -50,3 +52,23 @@ def test_export():
     mcubes.export_obj(vertices, triangles, "output/test.obj")
     mcubes.export_off(vertices, triangles, "output/test.off")
     mcubes.export_mesh(vertices, triangles, "output/test.dae")
+
+
+def test_invalid_input():
+
+    def func(x, y, z):
+        return x**2 + y**2 + z**2 - 1
+    
+    mcubes.marching_cubes_func((-1.5, -1.5, -1.5), (1.5, 1.5, 1.5), 10, 10, 10, func, 0)
+
+    with pytest.raises(ValueError):
+        mcubes.marching_cubes_func((0, 0, 0), (0, 0, 0), 10, 10, 10, func, 0)
+    
+    with pytest.raises(ValueError):
+        mcubes.marching_cubes_func((-1.5, -1.5, -1.5), (1.5, 1.5, 1.5), 1, 10, 10, func, 0)
+    
+    with pytest.raises(Exception):
+        mcubes.marching_cubes_func((-1.5, -1.5), (1.5, 1.5, 1.5), 10, 10, 10, func, 0)
+    
+    with pytest.raises(Exception):
+        mcubes.marching_cubes_func((-1.5, -1.5, -1.5), (1.5, 1.5), 10, 10, 10, func, 0)
