@@ -34,8 +34,6 @@ void marching_cubes(const vector3& lower, const vector3& upper,
     if(!std::equal(std::begin(lower), std::end(lower), std::begin(upper),
                    [](double a, double b)->bool {return a <= b;}))
         return;
-
-    // typedef decltype(lower[0]) coord_type;
     
     // numx, numy and numz are the numbers of evaluations in each direction
     --numx; --numy; --numz;

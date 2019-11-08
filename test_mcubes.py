@@ -20,7 +20,7 @@ def test_sphere():
     u = (x - 50)**2 + (y - 50)**2 + (z - 50)**2 - 25**2
     
     def func(x, y, z):
-        return u[int(x), int(y), int(z)]
+        return (x - 50)**2 + (y - 50)**2 + (z - 50)**2 - 25**2
     
     vertices1, triangles1 = mcubes.marching_cubes(u, 0.0)
     vertices2, triangles2 = mcubes.marching_cubes_func(
