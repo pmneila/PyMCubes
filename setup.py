@@ -60,7 +60,7 @@ def extensions():
 
 setup(
     name="PyMCubes",
-    version="0.0.10",
+    version="0.0.11",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquez@artorg.unibe.ch",
@@ -70,7 +70,7 @@ setup(
     Marching cubes for Python
     """,
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
