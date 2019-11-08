@@ -6,24 +6,9 @@
 #include <stdexcept>
 #include <array>
 
-struct PythonToCFunc
-{
-    PyObject* func;
-    PythonToCFunc(PyObject* func) : func(func) {}
-    double operator()(double x, double y, double z)
-    {
-        PyObject* res = PyObject_CallFunction(func, "(d,d,d)", x, y, z); // py::extract<double>(func(x,y,z));
-        if(res == NULL)
-            return 0.0;
-        
-        double result = PyFloat_AsDouble(res);
-        Py_DECREF(res);
-        return result;
-    }
-};
 
 PyObject* marching_cubes_func(PyObject* lower, PyObject* upper,
-    int numx, int numy, int numz, PyObject* f, double isovalue)
+    int numx, int numy, int numz, PyObject* pyfunc, double isovalue)
 {
     std::vector<double> vertices;
     std::vector<size_t> polygons;
@@ -54,9 +39,19 @@ PyObject* marching_cubes_func(PyObject* lower, PyObject* upper,
                 throw std::runtime_error("unknown error");
         }
     }
+
+    auto pyfunc_to_cfunc = [&](double x, double y, double z) -> double {
+        PyObject* res = PyObject_CallFunction(pyfunc, "(d,d,d)", x, y, z);
+        if(res == NULL)
+            return 0.0;
+        
+        double result = PyFloat_AsDouble(res);
+        Py_DECREF(res);
+        return result;
+    };
     
     // Marching cubes.
-    mc::marching_cubes<double>(lower_, upper_, numx, numy, numz, PythonToCFunc(f), isovalue, vertices, polygons);
+    mc::marching_cubes(lower_, upper_, numx, numy, numz, pyfunc_to_cfunc, isovalue, vertices, polygons);
     
     // Copy the result to two Python ndarrays.
     npy_intp size_vertices = vertices.size();
@@ -77,16 +72,6 @@ PyObject* marching_cubes_func(PyObject* lower, PyObject* upper,
     return res;
 }
 
-struct PyArrayToCFunc
-{
-    PyArrayObject* arr;
-    PyArrayToCFunc(PyArrayObject* arr) : arr(arr) {}
-    double operator()(int x, int y, int z)
-    {
-        npy_intp c[3] = {x,y,z};
-        return PyArray_SafeGet<double>(arr, c);
-    }
-};
 
 PyObject* marching_cubes(PyArrayObject* arr, double isovalue)
 {
@@ -95,16 +80,21 @@ PyObject* marching_cubes(PyArrayObject* arr, double isovalue)
     
     // Prepare data.
     npy_intp* shape = PyArray_DIMS(arr);
-    long lower[3] = {0,0,0};
-    long upper[3] = {shape[0]-1, shape[1]-1, shape[2]-1};
+    std::array<long, 3> lower{0, 0, 0};
+    std::array<long, 3> upper{shape[0]-1, shape[1]-1, shape[2]-1};
     long numx = upper[0] - lower[0] + 1;
     long numy = upper[1] - lower[1] + 1;
     long numz = upper[2] - lower[2] + 1;
     std::vector<double> vertices;
     std::vector<size_t> polygons;
     
+    auto pyarray_to_cfunc = [&](long x, long y, long z) -> double {
+        const npy_intp c[3] = {x, y, z};
+        return PyArray_SafeGet<double>(arr, c);
+    };
+
     // Marching cubes.
-    mc::marching_cubes<long>(lower, upper, numx, numy, numz, PyArrayToCFunc(arr), isovalue,
+    mc::marching_cubes(lower, upper, numx, numy, numz, pyarray_to_cfunc, isovalue,
                         vertices, polygons);
     
     // Copy the result to two Python ndarrays.
