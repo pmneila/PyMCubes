@@ -4,6 +4,7 @@
 #include "marchingcubes.h"
 
 #include <stdexcept>
+#include <array>
 
 struct PythonToCFunc
 {
@@ -28,18 +29,18 @@ PyObject* marching_cubes_func(PyObject* lower, PyObject* upper,
     std::vector<size_t> polygons;
     
     // Copy the lower and upper coordinates to a C array.
-    double lower_[3];
-    double upper_[3];
+    std::array<double,3> lower_;
+    std::array<double,3> upper_;
     for(int i=0; i<3; ++i)
     {
         PyObject* l = PySequence_GetItem(lower, i);
         if(l == NULL)
-            throw std::runtime_error("error");
+            throw std::runtime_error("len(lower) < 3");
         PyObject* u = PySequence_GetItem(upper, i);
         if(u == NULL)
         {
             Py_DECREF(l);
-            throw std::runtime_error("error");
+            throw std::runtime_error("len(upper) < 3");
         }
         
         lower_[i] = PyFloat_AsDouble(l);
@@ -50,7 +51,7 @@ PyObject* marching_cubes_func(PyObject* lower, PyObject* upper,
         if(lower_[i]==-1.0 || upper_[i]==-1.0)
         {
             if(PyErr_Occurred())
-                throw std::runtime_error("error");
+                throw std::runtime_error("unknown error");
         }
     }
     
