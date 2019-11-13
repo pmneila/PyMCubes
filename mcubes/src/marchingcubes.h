@@ -3,6 +3,7 @@
 #define _MARCHING_CUBES_H
 
 #include <stddef.h>
+#include <array>
 #include <vector>
 
 namespace mc
@@ -23,9 +24,10 @@ void mc_add_vertex(double x1, double y1, double z1, double c2,
 template<typename vector3, typename formula>
 void marching_cubes(const vector3& lower, const vector3& upper,
     int numx, int numy, int numz, formula f, double isovalue,
-    std::vector<double>& vertices, std::vector<size_t>& polygons)
+    std::vector<double>& vertices, std::vector<typename vector3::size_type>& polygons)
 {
     using coord_type = typename vector3::value_type;
+    using size_type = typename vector3::size_type;
     using namespace private_;
 
     // Some initial checks
@@ -39,15 +41,14 @@ void marching_cubes(const vector3& lower, const vector3& upper,
     // numx, numy and numz are the numbers of evaluations in each direction
     --numx; --numy; --numz;
     
-    coord_type dx = (upper[0] - lower[0])/static_cast<coord_type>(numx);
-    coord_type dy = (upper[1] - lower[1])/static_cast<coord_type>(numy);
-    coord_type dz = (upper[2] - lower[2])/static_cast<coord_type>(numz);
+    coord_type dx = (upper[0] - lower[0]) / static_cast<coord_type>(numx);
+    coord_type dy = (upper[1] - lower[1]) / static_cast<coord_type>(numy);
+    coord_type dz = (upper[2] - lower[2]) / static_cast<coord_type>(numz);
     
-    // size_t* shared_indices = new size_t[2*numy*numz*3];
     const int num_shared_indices = 2 * (numy + 1) * (numz + 1);
-    std::vector<size_t> shared_indices_x(num_shared_indices);
-    std::vector<size_t> shared_indices_y(num_shared_indices);
-    std::vector<size_t> shared_indices_z(num_shared_indices);
+    std::vector<size_type> shared_indices_x(num_shared_indices);
+    std::vector<size_type> shared_indices_y(num_shared_indices);
+    std::vector<size_type> shared_indices_z(num_shared_indices);
     
     // const int numz = numz*3;
     const int numyz = numy*numz;
@@ -86,7 +87,7 @@ void marching_cubes(const vector3& lower, const vector3& upper,
                 // Generate vertices AVOIDING DUPLICATES.
                 
                 int edges = edge_table[cubeindex];
-                std::vector<size_t> indices(12, -1);
+                std::array<size_type, 12> indices;
                 if(edges & 0x040)
                 {
                     indices[6] = vertices.size() / 3;
