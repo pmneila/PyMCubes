@@ -1,7 +1,9 @@
+.DS_Store
 *.dae
 _mcubes.cpp
 *.py[cod]
 .vscode
+.mypy_cache
 
 .vscode
 
