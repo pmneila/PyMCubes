@@ -46,15 +46,21 @@ def extensions():
             "mcubes/src/marchingcubes.cpp"
         ],
         language="c++",
-        extra_compile_args=['-std=c++11'],
-        include_dirs=[numpy_include_dir]
+        extra_compile_args=['-std=c++11', '-Wall'],
+        include_dirs=[numpy_include_dir],
+        depends=[
+            "mcubes/src/marchingcubes.h",
+            "mcubes/src/pyarray_symbol.h",
+            "mcubes/src/pyarraymodule.h",
+            "mcubes/src/pywrapper.h"
+        ],
     )
     
     return cythonize([mcubes_module])
 
 setup(
     name="PyMCubes",
-    version="0.0.9",
+    version="0.0.12",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquez@artorg.unibe.ch",
@@ -64,7 +70,7 @@ setup(
     Marching cubes for Python
     """,
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
