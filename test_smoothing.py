@@ -28,9 +28,10 @@ def test_sphere():
 
     # Check all vertices have same distance to (50, 50, 50)
     dist = np.sqrt(np.sum((vertices - [50, 50, 50])**2, axis=1))
-    assert dist.min() > 24.5 and dist.max() < 25.5
 
+    assert dist.min() > 24.5 and dist.max() < 25.5
     assert np.all(np.abs(smoothed_levelset - levelset) < 1)
+    assert np.all((smoothed_levelset > 0) == binary_levelset)
 
 
 def test_gaussian_smoothing():
@@ -100,6 +101,7 @@ def test_circle():
     )
 
     assert np.all(np.abs(smoothed_levelset - levelset) < 1)
+    assert np.all((smoothed_levelset > 0) == binary_levelset)
 
 
 # if __name__ == '__main__':
