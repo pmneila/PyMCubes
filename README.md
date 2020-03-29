@@ -61,7 +61,7 @@ than using a `NumPy` array.
 
 ## Smoothing binary arrays
 
-![Overview](images/binary.jpg "Overview of mcubes.smooth")
+![Overview](images/smoothing_overview.jpg "Overview of mcubes.smooth")
 
 Many segmentation methods build binary masks to separate _inside_ and _outside_
 areas of the segmented object. When passing these binary mask to the marching
