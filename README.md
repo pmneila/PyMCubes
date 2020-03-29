@@ -91,4 +91,4 @@ vertices, triangles = mcubes.marching_cubes(smoothed_sphere, 0)
 areas where the binary embedding array is 0, and positive values in the areas
 where it is 1. In this way, `mcubes.smooth` keeps all the information from the
 original embedding function, including fine details and thin structures that
-are commonly eroded by more standard smoothing methods.
+are commonly eroded by other standard smoothing methods.
