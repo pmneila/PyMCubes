@@ -9,35 +9,35 @@ class lazy_cythonize(list):
     """
     Lazy evaluate extension definition, to allow correct requirements install.
     """
-    
+
     def __init__(self, callback):
         super(lazy_cythonize, self).__init__()
         self._list, self.callback = None, callback
-    
+
     def c_list(self):
         if self._list is None:
             self._list = self.callback()
-        
+
         return self._list
-    
+
     def __iter__(self):
         for e in self.c_list():
             yield e
-    
+
     def __getitem__(self, ii):
         return self.c_list()[ii]
-    
+
     def __len__(self):
         return len(self.c_list())
 
 
 def extensions():
-    
+
     from Cython.Build import cythonize
     import numpy
-    
+
     numpy_include_dir = numpy.get_include()
-    
+
     mcubes_module = Extension(
         "mcubes._mcubes",
         [
@@ -55,12 +55,12 @@ def extensions():
             "mcubes/src/pywrapper.h"
         ],
     )
-    
+
     return cythonize([mcubes_module])
 
 setup(
     name="PyMCubes",
-    version="0.0.12",
+    version="0.1.0",
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquez@artorg.unibe.ch",

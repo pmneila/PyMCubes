@@ -59,12 +59,14 @@ a `NumPy` array:
 Note that using a function to represent the volumetric data is **much** slower
 than using a `NumPy` array.
 
-## Smoothing
+## Smoothing binary arrays
+
+![Overview](images/binary.jpg "Overview of mcubes.smooth")
 
 Many segmentation methods build binary masks to separate _inside_ and _outside_
 areas of the segmented object. When passing these binary mask to the marching
-cubes algorithm the resulting mesh looks jagged. For example, with the binary
-mask of a sphere,
+cubes algorithm the resulting mesh looks jagged. The following code shows an
+example with a binary array embedding a sphere.
 ```Python
 x, y, z = np.mgrid[:100, :100, :100]
 binary_sphere = (x - 50)**2 + (y - 50)**2 + (z - 50)**2 - 25**2 < 0
@@ -72,12 +74,10 @@ binary_sphere = (x - 50)**2 + (y - 50)**2 + (z - 50)**2 - 25**2 < 0
 # Extract the 0.5-levelset since the array is binary
 vertices, triangles = mcubes.marching_cubes(binary_sphere, 0.5)
 ```
-the resulting mesh is
-
-![Mesh of a binary embedding function](images/binary.jpg "Marching cubes with a binary embedding function")
+![Mesh of a binary embedding](images/binary.jpg "Marching cubes with a binary embedding")
 
 `PyMCubes` provides the function `mcubes.smooth` that takes a 2D or 3D binary
-embedding function and produces a smooth version of it:
+embedding function and produces a smooth version of it.
 ```Python
 smoothed_sphere = mcubes.smooth(binary_sphere)
 
@@ -85,12 +85,10 @@ smoothed_sphere = mcubes.smooth(binary_sphere)
 # smoothed version of the 0.5-levelset of the binary array).
 vertices, triangles = mcubes.marching_cubes(smoothed_sphere, 0)
 ```
-The mesh after smoothing is
+![Mesh of a smoothed embedding](images/smooth.jpg "Marching cubes after smoothing the binary embedding")
 
-![Mesh of a smoothed embedding function](images/smooth.jpg "Marching cubes after smoothing the binary embedding function")
-
-`mcubes.smooth` builds a smooth embedding function with negative values in the
-areas where the binary embedding function is 0, and positive values in the areas
+`mcubes.smooth` builds a smooth embedding array with negative values in the
+areas where the binary embedding array is 0, and positive values in the areas
 where it is 1. In this way, `mcubes.smooth` keeps all the information from the
 original embedding function, including fine details and thin structures that
 are commonly eroded by more standard smoothing methods.
