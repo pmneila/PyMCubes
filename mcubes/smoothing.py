@@ -165,7 +165,7 @@ def _jacobi(
     cum_rel_tol = 1 - (1 - rel_tol)**check_each
 
     energy_now = np.dot(x, filterq.dot(x)) / 2
-    logging.info("Energy at iter %d: %.6g", 0, energy_now)
+    logging.debug("Energy at iter %d: %.6g", 0, energy_now)
     for i in range(max_iters):
 
         x_1 = - jacobi_d * jacobi_r.dot(x)
@@ -181,7 +181,7 @@ def _jacobi(
             energy_before = energy_now
             energy_now = np.dot(x, filterq.dot(x)) / 2
 
-            logging.info("Energy at iter %d: %.6g", i + 1, energy_now)
+            logging.debug("Energy at iter %d: %.6g", i + 1, energy_now)
 
             # Check stopping criterion
             cum_rel_improvement = (energy_before - energy_now) / energy_before
@@ -220,7 +220,7 @@ def signed_distance_function(
 def smooth_constrained(
         binary_array: np.ndarray,
         band_radius: int = 4,
-        max_iters: int = 250,
+        max_iters: int = 500,
         rel_tol: float = 1e-6
         ) -> np.ndarray:
     """
@@ -311,7 +311,7 @@ def smooth(
     ----------------------------
     max_iters : positive integer
         Number of iterations of the constrained optimization method
-        (default 250).
+        (default 500).
     rel_tol: float
         Relative tolerance as a stopping criterion (default 1e-6).
 
