@@ -1,8 +1,12 @@
 # -*- encoding: utf-8 -*-
 
+import runpy
+
 from setuptools import setup
 
 from setuptools.extension import Extension
+
+__version_str__ = runpy.run_path("mcubes/version.py")["__version_str__"]
 
 
 class lazy_cythonize(list):
@@ -60,7 +64,7 @@ def extensions():
 
 setup(
     name="PyMCubes",
-    version="0.1.0",
+    version=__version_str__,
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquez@artorg.unibe.ch",
