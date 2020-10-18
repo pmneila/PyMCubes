@@ -1,25 +1,22 @@
-# vim ft=yaml
-
-# After changing this file, check it on:
-#   http://yaml-online-parser.appspot.com/
-
-# See doc/travis_notes.txt for some guidelines
 
 language: python
 
-matrix:
-  include:
-  - os: linux
-    dist: trusty
-    sudo: false
-    python: '3.6'
-  - os: linux
-    dist: xenial
-    sudo: required
-    python: '3.7'
+os: linux
 
-# See http://docs.travis-ci.com/user/caching/#pip-cache
+dist: xenial
+
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+
 cache: pip
+
+env:
+  global:
+    - TWINE_USERNAME=__token__
+    - CIBW_SKIP="cp27-* cp39-macosx_x86_64 pp*"
+    # - CIBW_BUILD=cp36-*
 
 before_install:
   - sudo apt-get update
@@ -39,6 +36,53 @@ script:
 
 after_success:
   - python setup.py install
-  - codecov # PUBLIC project
-  # - coverage report && coverage xml
-  # - python-codacy-coverage -r coverage.xml
+  - codecov
+
+stages:
+  - name: test
+  - name: deployment
+    if: branch = master AND type = push AND fork = false
+
+jobs:
+  include:
+    # Test jobs
+    # - stage: test
+    # Deployment jobs
+    # Linux build
+    - stage: deployment
+      before_install: skip
+      install: python3 -m pip install cibuildwheel==1.6.3
+      before_script: skip
+      script:
+        - python3 setup.py sdist
+        - python3 -m cibuildwheel --output-dir wheelhouse
+      after_success:
+        - python3 -m pip install twine
+        - python3 -m twine upload --skip-existing dist/*
+        - python3 -m twine upload --skip-existing wheelhouse/*.whl
+      services: docker
+    # MaxOS build
+    - os: osx
+      osx_image: xcode10.2
+      language: shell
+      before_install: skip
+      install: python3 -m pip install cibuildwheel==1.6.3
+      before_script: skip
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success:
+        - python3 -m pip install twine
+        - python3 -m twine upload --skip-existing wheelhouse/*.whl
+    # Windows build
+    - os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.8.0
+        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+        # make sure it's on PATH as 'python3'
+        - ln -s /c/Python38/python.exe /c/Python38/python3.exe
+      install: python3 -m pip install cibuildwheel==1.6.3
+      before_script: skip
+      script: python3 -m cibuildwheel --output-dir wheelhouse
+      after_success:
+        - python3 -m pip install twine
+        - python3 -m twine upload --skip-existing wheelhouse/*.whl
