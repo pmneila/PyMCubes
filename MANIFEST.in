@@ -9,7 +9,7 @@ exclude mcubes/src/_mcubes.cpp
 include examples/*.py
 include images/binary.jpg
 include images/smooth.jpg
-include images/smoothing.png
+include images/smoothing_overview.png
 
 include setup.py
 include README.rst
