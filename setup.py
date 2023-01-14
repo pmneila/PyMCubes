@@ -6,39 +6,14 @@ from setuptools import setup
 
 from setuptools.extension import Extension
 
+from Cython.Build import cythonize
+import numpy
+
+
 __version_str__ = runpy.run_path("mcubes/version.py")["__version_str__"]
 
 
-class lazy_cythonize(list):
-    """
-    Lazy evaluate extension definition, to allow correct requirements install.
-    """
-
-    def __init__(self, callback):
-        super(lazy_cythonize, self).__init__()
-        self._list, self.callback = None, callback
-
-    def c_list(self):
-        if self._list is None:
-            self._list = self.callback()
-
-        return self._list
-
-    def __iter__(self):
-        for e in self.c_list():
-            yield e
-
-    def __getitem__(self, ii):
-        return self.c_list()[ii]
-
-    def __len__(self):
-        return len(self.c_list())
-
-
 def extensions():
-
-    from Cython.Build import cythonize
-    import numpy
 
     numpy_include_dir = numpy.get_include()
 
@@ -58,9 +33,14 @@ def extensions():
             "mcubes/src/pyarraymodule.h",
             "mcubes/src/pywrapper.h"
         ],
+        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
     )
 
-    return cythonize([mcubes_module])
+    return cythonize(
+        [mcubes_module],
+        language_level="3"
+    )
+
 
 setup(
     name="PyMCubes",
@@ -87,7 +67,6 @@ setup(
         "Topic :: Scientific/Engineering :: Image Recognition",
     ],
     packages=["mcubes"],
-    ext_modules=lazy_cythonize(extensions),
-    requires=['numpy', 'Cython', 'PyCollada'],
-    setup_requires=['numpy', 'Cython']
+    ext_modules=extensions(),
+    requires=['numpy', 'Cython'],
 )

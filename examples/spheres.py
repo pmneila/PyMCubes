@@ -19,16 +19,19 @@ print("Done. Result saved in 'sphere1.dae'.")
 print("Example 2: Isosurface in Python function...")
 print("(this might take a while...)")
 
+
 # Create the volume
 def f(x, y, z):
     return x**2 + y**2 + z**2
 
+
 # Extract the 16-isosurface
 vertices2, triangles2 = mcubes.marching_cubes_func(
-        (-10,-10,-10), (10,10,10),  # Bounds
-        100, 100, 100,              # Number of samples in each dimension
-        f,                          # Implicit function
-        16)                         # Isosurface value
+        (-10, -10, -10),    # Lower bound
+        (10, 10, 10),       # Upper bound
+        100, 100, 100,      # Number of samples in each dimension
+        f,                  # Implicit function
+        16)                 # Isosurface value
 
 # Export the result to sphere2.dae
 mcubes.export_mesh(vertices2, triangles2, "sphere2.dae", "MySphere")
