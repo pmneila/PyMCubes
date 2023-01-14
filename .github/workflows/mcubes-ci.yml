@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-
+    name: Build and test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,7 +39,7 @@ jobs:
     name: Build wheels on ${{ matrix.os }} and deploy
     runs-on: ${{ matrix.os }}
     needs: test
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
 
     strategy:
       matrix:
