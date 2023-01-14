@@ -37,18 +37,12 @@ jobs:
 
   deploy-wheels:
     name: Deploy wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     needs: test
     env:
-      CIBW_BUILD: "cp39-manylinux_x86_64"
-      CIBW_SKIP: "*-win32 *-manylinux_i686 pp* cp36-* cp37-*"
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${{ secrets.TESTPYPI }}
     # if: github.ref == 'refs/heads/master'
-
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, windows-2019, macOS-11]
 
     steps:
       - uses: actions/checkout@v3
@@ -59,10 +53,41 @@ jobs:
       - name: Install cibuildwheel
         run: |
           python -m pip install --upgrade pip
-          python -m pip install cibuildwheel==2.11.4
-      - name: Build wheels
-        run: python3 -m cibuildwheel --output-dir wheelhouse
-      - name: Deploy
-        run: |
+          python -m pip install build
+      - name: Build sdist
+        run: python -m build --sdist
+      - name: Deploy sdist
+        run:
           python3 -m pip install twine
-          python3 -m twine upload --repository testpypi --skip-existing wheelhouse/*.whl
+          python3 -m twine upload --repository testpypi --skip-existing dist/*
+
+  # deploy-wheels:
+  #   name: Deploy wheels on ${{ matrix.os }}
+  #   runs-on: ${{ matrix.os }}
+  #   needs: test
+  #   env:
+  #     CIBW_SKIP: "*-win32 *-manylinux_i686 pp* cp36-* cp37-*"
+  #     TWINE_USERNAME: __token__
+  #     TWINE_PASSWORD: ${{ secrets.TESTPYPI }}
+  #   # if: github.ref == 'refs/heads/master'
+
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-20.04, windows-2019, macOS-11]
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.9'
+  #     - name: Install cibuildwheel
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         python -m pip install cibuildwheel==2.11.4
+  #     - name: Build wheels
+  #       run: python3 -m cibuildwheel --output-dir wheelhouse
+  #     - name: Deploy
+  #       run: |
+  #         python3 -m pip install twine
+  #         python3 -m twine upload --repository testpypi --skip-existing wheelhouse/*.whl
