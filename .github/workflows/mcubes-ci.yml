@@ -35,10 +35,15 @@ jobs:
           python -m pip install flake8
           flake8 .
 
-  deploy:
-    name: Build wheels on ${{ matrix.os }} and deploy
+  deploy-wheels:
+    name: Deploy wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: test
+    env:
+      CIBW_BUILD: "cp39-manylinux_x86_64"
+      CIBW_SKIP: "*-win32 *-manylinux_i686 pp* cp36-* cp37-*"
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD: ${{ secrets.TESTPYPI }}
     # if: github.ref == 'refs/heads/master'
 
     strategy:
@@ -57,3 +62,7 @@ jobs:
           python -m pip install cibuildwheel==2.11.4
       - name: Build wheels
         run: python3 -m cibuildwheel --output-dir wheelhouse
+      - name: Deploy
+        run: |
+          python3 -m pip install twine
+          python3 -m twine upload --repository testpypi --skip-existing wheelhouse/*.whl
