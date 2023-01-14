@@ -20,13 +20,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools cython
           python -m pip install -r requirements.txt
-          python -m pip install pycollada
-          python -m pip install pytest>=7.2.0 pytest-cov>=4.0 codecov
       - name: Build the package
         run: |
           python setup.py build_ext --inplace
-      - name: Test
+      - name: Test and coverage
         run: |
+          python -m pip install pycollada
+          python -m pip install pytest>=7.2.0 pytest-cov>=4.0 codecov
           mkdir output
           python -m pytest --cov=mcubes --cov-report=xml
           codecov
+      - name: Flake8
+        run: |
+          python -m pip install flake8
+          flake8 .
