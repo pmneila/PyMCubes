@@ -28,5 +28,5 @@ jobs:
       - name: Test
         run: |
           mkdir output
-          python -m pytest --cov mcubes
+          python -m pytest --cov=mcubes --cov-report=xml
           codecov

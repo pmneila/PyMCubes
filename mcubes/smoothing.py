@@ -45,7 +45,7 @@ def _buildq3d(variable_indices: np.ndarray):
     coords = np.nonzero(variable_indices >= 0)
     for count, (i, j, k) in enumerate(zip(*coords)):
 
-        assert(variable_indices[i, j, k] == count)
+        assert variable_indices[i, j, k] == count
 
         filterq[3*count, count] = -2
         neighbor = variable_indices[i-1, j, k]
@@ -110,7 +110,8 @@ def _buildq2d(variable_indices: np.ndarray):
 
     coords = np.nonzero(variable_indices >= 0)
     for count, (i, j) in enumerate(zip(*coords)):
-        assert(variable_indices[i, j] == count)
+
+        assert variable_indices[i, j] == count
 
         filterq[2*count, count] = -2
         neighbor = variable_indices[i-1, j]
