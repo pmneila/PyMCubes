@@ -47,7 +47,7 @@ setup(
     version=__version_str__,
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
-    author_email="pablo.marquez@artorg.unibe.ch",
+    author_email="pablo.marquez@unibe.ch",
     url="https://github.com/pmneila/PyMCubes",
     license="BSD 3-clause",
     long_description="""
@@ -68,5 +68,5 @@ setup(
     ],
     packages=["mcubes"],
     ext_modules=extensions(),
-    requires=['numpy', 'Cython'],
+    install_requires=['numpy', 'scipy>=1.0.0'],
 )
