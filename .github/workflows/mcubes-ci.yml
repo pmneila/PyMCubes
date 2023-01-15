@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v3
@@ -42,8 +42,8 @@ jobs:
     needs: test
     env:
       TWINE_USERNAME: __token__
-      TWINE_PASSWORD: ${{ secrets.PYPI }}
-    if: github.ref == 'refs/heads/master'
+      TWINE_PASSWORD: ${{ secrets.TESTPYPI }}
+    # if: github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v3
@@ -60,7 +60,7 @@ jobs:
       - name: Deploy sdist
         run: |
           python3 -m pip install twine
-          python3 -m twine upload --skip-existing dist/*
+          python3 -m twine upload --repository testpypi --skip-existing dist/*
 
   deploy-wheels:
     name: Deploy wheels on ${{ matrix.os }}
@@ -68,11 +68,12 @@ jobs:
     needs: test
     env:
       CIBW_ARCHS: "auto64"
-      CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* pp*"
+      CIBW_BUILD: "cp39-*"
+      # CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* pp*"
       CIBW_SKIP: "*musllinux*"
       TWINE_USERNAME: __token__
-      TWINE_PASSWORD: ${{ secrets.PYPI }}
-    if: github.ref == 'refs/heads/master'
+      TWINE_PASSWORD: ${{ secrets.TESTPYPI }}
+    # if: github.ref == 'refs/heads/master'
 
     strategy:
       matrix:
@@ -93,4 +94,4 @@ jobs:
       - name: Deploy
         run: |
           python3 -m pip install twine
-          python3 -m twine upload --skip-existing wheelhouse/*.whl
+          python3 -m twine upload --repository testpypi --skip-existing wheelhouse/*.whl

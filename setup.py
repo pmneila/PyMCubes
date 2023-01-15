@@ -68,5 +68,5 @@ setup(
     ],
     packages=["mcubes"],
     ext_modules=extensions(),
-    install_requires=['numpy>=1.23', 'scipy>=1.0.0'],
+    install_requires=['numpy', 'scipy>=1.0.0'],
 )
