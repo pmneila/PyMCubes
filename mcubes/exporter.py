@@ -13,7 +13,7 @@ def export_obj(vertices, triangles, filename):
             fh.write("v {} {} {}\n".format(*v))
 
         for f in triangles:
-            fh.write("f {} {} {}\n".format(*(f + 1)))
+            fh.write("f {} {} {}\n".format(*(f[::-1] + 1)))
 
 
 def export_off(vertices, triangles, filename):
