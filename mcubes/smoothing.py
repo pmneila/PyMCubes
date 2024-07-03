@@ -21,7 +21,7 @@ __all__ = [
 
 def _build_variable_indices(band: np.ndarray) -> np.ndarray:
     num_variables = np.count_nonzero(band)
-    variable_indices = np.full(band.shape, -1, dtype=np.int_)
+    variable_indices = np.full(band.shape, -1, dtype=np.int32)
     variable_indices[band] = np.arange(num_variables)
     return variable_indices
 
@@ -271,7 +271,7 @@ def smooth_constrained(
 
 
 def smooth_gaussian(binary_array: np.ndarray, sigma: float = 3) -> np.ndarray:
-    vol = np.float_(binary_array) - 0.5
+    vol = np.float64(binary_array) - 0.5
     return ndi.gaussian_filter(vol, sigma=sigma)
 
 

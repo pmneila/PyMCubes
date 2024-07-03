@@ -6,7 +6,7 @@ __all__ = [
     'numpy_smooth',
 ]
 
-FILTER = np.array([1, -2, 1], dtype=np.float_)
+FILTER = np.array([1, -2, 1], dtype=np.float64)
 
 JACOBI_R_2D = np.array([
     [0, 0, 1, 0, 0],
@@ -14,7 +14,7 @@ JACOBI_R_2D = np.array([
     [1, -4, 0, -4, 1],
     [0, 0, -4, 0, 0],
     [0, 0, 1, 0, 0]
-], dtype=np.float_)
+], dtype=np.float64)
 JACOBI_D_2D = 1/12
 
 JACOBI_R_3D = np.array([
@@ -43,7 +43,7 @@ JACOBI_R_3D = np.array([
      [0, 0, 1, 0, 0],
      [0, 0, 0, 0, 0],
      [0, 0, 0, 0, 0]]
-], dtype=np.float_)
+], dtype=np.float64)
 
 JACOBI_D_3D = 1/18
 

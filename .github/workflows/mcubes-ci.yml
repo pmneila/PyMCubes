@@ -18,16 +18,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools cython
-          python -m pip install --upgrade oldest-supported-numpy
-      - name: Build the package
+          python -m pip install --upgrade pip
+      - name: Install the package
         run: |
-          python setup.py build_ext --inplace
-      - name: Test and coverage
+          python -m pip install -e .
+      - name: Install dependencies for test
         run: |
-          python -m pip install -r requirements.txt
           python -m pip install pycollada
           python -m pip install pytest>=7.2.0 pytest-cov>=4.0 codecov
+      - name: Test and coverage
+        run: |
           mkdir output
           python -m pytest --cov=mcubes --cov-report=xml
           codecov
@@ -69,8 +69,8 @@ jobs:
     env:
       CIBW_ARCHS: "auto64"
       # CIBW_BUILD: "cp39-*"
-      CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
-      CIBW_SKIP: "*musllinux*"
+      CIBW_BUILD: "cp37-* cp38-* cp39-* cp310-* cp311-* pp*"
+      CIBW_SKIP: "*musllinux* pp*-win* pp*-macosx*"
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${{ secrets.PYPI }}
     if: github.ref == 'refs/heads/master'
