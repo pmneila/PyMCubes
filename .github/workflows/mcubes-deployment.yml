@@ -4,7 +4,6 @@ on:
   push:
     tags: 'v[0-9]+*'
 
-
 jobs:
   deploy-sdist:
     name: Deploy source distribution
@@ -12,7 +11,6 @@ jobs:
     env:
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${{ secrets.PYPI }}
-    if: github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +38,6 @@ jobs:
       CIBW_SKIP: "*musllinux* pp*-win* pp*-macosx*"
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${{ secrets.PYPI }}
-    if: github.ref == 'refs/heads/master'
 
     strategy:
       matrix:
