@@ -4,7 +4,7 @@ import mcubes
 
 print("Example 1: Isosurface in NumPy volume...")
 
-# Create a data volume (30 x 30 x 30)
+# Create a data volume
 X, Y, Z = np.mgrid[:100, :100, :100]
 u = (X-50)**2 + (Y-50)**2 + (Z-50)**2 - 25**2
 
