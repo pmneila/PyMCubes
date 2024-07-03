@@ -1,6 +1,7 @@
 name: PyMCubes
 
-on: [push]
+on:
+  pull_request:
 
 jobs:
   test:
@@ -8,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v3
@@ -50,7 +51,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
       - name: Install cibuildwheel
         run: |
           python -m pip install --upgrade pip
@@ -69,7 +70,7 @@ jobs:
     env:
       CIBW_ARCHS: "auto64"
       # CIBW_BUILD: "cp39-*"
-      CIBW_BUILD: "cp37-* cp38-* cp39-* cp310-* cp311-* pp*"
+      CIBW_BUILD: "cp39-* cp310-* cp311-* pp*"
       CIBW_SKIP: "*musllinux* pp*-win* pp*-macosx*"
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${{ secrets.PYPI }}
