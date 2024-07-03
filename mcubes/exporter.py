@@ -2,9 +2,12 @@
 import numpy as np
 
 
-def export_obj(vertices, triangles, filename):
+def export_obj(vertices: np.ndarray, triangles: np.ndarray, filename: str, flip_normals: bool = False):
     """
-    Exports a mesh in the (.obj) format.
+    Export a 3D mesh to a Wavefront (.obj) file.
+
+    If `flip_normals` is True, reverses the order of the vertices in each face
+    to flip the normals. Default is False.
     """
 
     with open(filename, 'w') as fh:
@@ -12,11 +15,15 @@ def export_obj(vertices, triangles, filename):
         for v in vertices:
             fh.write("v {} {} {}\n".format(*v))
 
-        for f in triangles:
-            fh.write("f {} {} {}\n".format(*(f + 1)))
+        if not flip_normals:
+            for f in triangles:
+                fh.write("f {} {} {}\n".format(*(f + 1)))
+        else:
+            for f in triangles:
+                fh.write("f {} {} {}\n".format(*(f[::-1] + 1)))
 
 
-def export_off(vertices, triangles, filename):
+def export_off(vertices: np.ndarray, triangles: np.ndarray, filename: str):
     """
     Exports a mesh in the (.off) format.
     """
@@ -32,7 +39,7 @@ def export_off(vertices, triangles, filename):
             fh.write("3 {} {} {}\n".format(*f))
 
 
-def export_mesh(vertices, triangles, filename, mesh_name="mcubes_mesh"):
+def export_mesh(vertices: np.ndarray, triangles: np.ndarray, filename: str, mesh_name: str = "mcubes_mesh"):
     """
     Exports a mesh in the COLLADA (.dae) format.
 

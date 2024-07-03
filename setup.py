@@ -10,7 +10,7 @@ from Cython.Build import cythonize
 import numpy
 
 
-__version_str__ = runpy.run_path("mcubes/version.py")["__version_str__"]
+__version__ = runpy.run_path("mcubes/version.py")["__version__"]
 
 
 def extensions():
@@ -44,7 +44,7 @@ def extensions():
 
 setup(
     name="PyMCubes",
-    version=__version_str__,
+    version=__version__,
     description="Marching cubes for Python",
     author="Pablo Márquez Neila",
     author_email="pablo.marquez@unibe.ch",
@@ -68,5 +68,5 @@ setup(
     ],
     packages=["mcubes"],
     ext_modules=extensions(),
-    install_requires=['numpy', 'scipy>=1.0.0'],
+    install_requires=['numpy>=1.26', 'scipy>=1.0.0'],
 )
