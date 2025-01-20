@@ -299,34 +299,20 @@ double mc_isovalue_interpolation(double isovalue, double f1, double f2,
 size_t mc_add_vertex(double x1, double y1, double z1, double c2,
     int axis, double f1, double f2, double isovalue, std::vector<double>* vertices)
 {
-    size_t vertex_index = vertices->size() / 3;
-    if(axis == 0)
-    {
-        double x = mc_isovalue_interpolation(isovalue, f1, f2, x1, c2);
-        vertices->push_back(x);
-        vertices->push_back(y1);
-        vertices->push_back(z1);
-        return vertex_index;
-    }
-    if(axis == 1)
-    {
-        double y = mc_isovalue_interpolation(isovalue, f1, f2, y1, c2);
-        vertices->push_back(x1);
-        vertices->push_back(y);
-        vertices->push_back(z1);
-        return vertex_index;
-    }
-    if(axis == 2)
-    {
-        double z = mc_isovalue_interpolation(isovalue, f1, f2, z1, c2);
-        vertices->push_back(x1);
-        vertices->push_back(y1);
-        vertices->push_back(z);
-        return vertex_index;
-    }
-
-    // This should not happen.
-    return -1;
+    double calculated_value = mc_isovalue_interpolation(isovalue, f1, f2,
+        // Use maths instead of branches for quicker code
+        // True -> 1,  False -> 0
+          (x1 * (axis == 0))
+        + (y1 * (axis == 1))
+        + (z1 * (axis == 2)),
+    c2);
+    auto to_return = vertices->size()/3;
+    // Write in correct order with maths as well
+    vertices->push_back((calculated_value * (axis == 0)) + (x1 * (axis != 0)));
+    vertices->push_back((calculated_value * (axis == 1)) + (y1 * (axis != 1)));
+    vertices->push_back((calculated_value * (axis == 2)) + (z1 * (axis != 2))); 
+        
+    return to_return;
 }
 
 }
