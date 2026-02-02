@@ -1,4 +1,6 @@
 include mcubes/*.py
+include mcubes/*.pyi
+include mcubes/py.typed
 exclude mcubes/numpy_smoothing.py
 
 include mcubes/src/*.h

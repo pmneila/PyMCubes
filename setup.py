@@ -67,6 +67,7 @@ setup(
         "Topic :: Scientific/Engineering :: Image Recognition",
     ],
     packages=["mcubes"],
+    package_data={"mcubes": ["py.typed", "*.pyi"]},
     ext_modules=extensions(),
     install_requires=['numpy>=1.21', 'scipy>=1.0.0'],
 )
