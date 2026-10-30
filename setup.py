@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import runpy
+import sys
 
 from setuptools import setup
 
@@ -11,6 +12,13 @@ import numpy
 
 
 __version__ = runpy.run_path("mcubes/version.py")["__version__"]
+
+
+def compile_args():
+    # The core uses std::thread, which needs an explicit pthread link on Linux.
+    if sys.platform == "win32":
+        return []
+    return ["-std=c++11", "-Wall", "-pthread"]
 
 
 def extensions():
@@ -25,7 +33,8 @@ def extensions():
             "mcubes/src/marchingcubes.cpp"
         ],
         language="c++",
-        extra_compile_args=['-std=c++11', '-Wall'],
+        extra_compile_args=compile_args(),
+        extra_link_args=["-pthread"] if sys.platform != "win32" else [],
         include_dirs=[numpy_include_dir],
         depends=[
             "mcubes/src/marchingcubes.h",
