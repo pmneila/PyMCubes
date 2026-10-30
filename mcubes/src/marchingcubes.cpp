@@ -4,7 +4,7 @@
 namespace mc
 {
 
-int edge_table[256] =
+const int edge_table[256] =
 {
     0x000, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c, 0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
     0x190, 0x099, 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c, 0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90,
@@ -24,7 +24,7 @@ int edge_table[256] =
     0xf00, 0xe09, 0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c, 0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109, 0x000
 };
 
-int triangle_table[256][16] =
+const int triangle_table[256][16] =
 {
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     {0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -284,6 +284,28 @@ int triangle_table[256][16] =
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 };
 
+// Number of polygon indices of each cube configuration, i.e. the entries of
+// triangle_table[cube_index] before its -1 terminator.
+const int num_indices_table[256] =
+{
+    0,  3,  3,  6,  3,  6,  6,  9,  3,  6,  6,  9,  6,  9,  9,  6,
+    3,  6,  6,  9,  6,  9,  9, 12,  6,  9,  9, 12,  9, 12, 12,  9,
+    3,  6,  6,  9,  6,  9,  9, 12,  6,  9,  9, 12,  9, 12, 12,  9,
+    6,  9,  9,  6,  9, 12, 12,  9,  9, 12, 12,  9, 12, 15, 15,  6,
+    3,  6,  6,  9,  6,  9,  9, 12,  6,  9,  9, 12,  9, 12, 12,  9,
+    6,  9,  9, 12,  9, 12, 12, 15,  9, 12, 12, 15, 12, 15, 15, 12,
+    6,  9,  9, 12,  9, 12,  6,  9,  9, 12, 12, 15, 12, 15,  9,  6,
+    9, 12, 12,  9, 12, 15,  9,  6, 12, 15, 15, 12, 15,  6, 12,  3,
+    3,  6,  6,  9,  6,  9,  9, 12,  6,  9,  9, 12,  9, 12, 12,  9,
+    6,  9,  9, 12,  9, 12, 12, 15,  9,  6, 12,  9, 12,  9, 15,  6,
+    6,  9,  9, 12,  9, 12, 12, 15,  9, 12, 12, 15, 12, 15, 15, 12,
+    9, 12, 12,  9, 12, 15, 15, 12, 12,  9, 15,  6, 15, 12,  6,  3,
+    6,  9,  9, 12,  9, 12, 12, 15,  9, 12, 12, 15,  6,  9,  9,  6,
+    9, 12, 12, 15, 12, 15, 15,  6, 12,  9, 15, 12,  9,  6, 12,  3,
+    9, 12, 12, 15, 12, 15,  9, 12, 12, 15, 15,  6,  9, 12,  6,  3,
+    6,  9,  9,  6,  9, 12,  6,  3,  9,  6, 12,  3,  6,  3,  3,  0,
+};
+
 namespace private_
 {
 
@@ -294,39 +316,6 @@ double mc_isovalue_interpolation(double isovalue, double f1, double f2,
         return (x2+x1)/2;
 
     return (x2-x1)*(isovalue-f1)/(f2-f1) + x1;
-}
-
-size_t mc_add_vertex(double x1, double y1, double z1, double c2,
-    int axis, double f1, double f2, double isovalue, std::vector<double>* vertices)
-{
-    size_t vertex_index = vertices->size() / 3;
-    if(axis == 0)
-    {
-        double x = mc_isovalue_interpolation(isovalue, f1, f2, x1, c2);
-        vertices->push_back(x);
-        vertices->push_back(y1);
-        vertices->push_back(z1);
-        return vertex_index;
-    }
-    if(axis == 1)
-    {
-        double y = mc_isovalue_interpolation(isovalue, f1, f2, y1, c2);
-        vertices->push_back(x1);
-        vertices->push_back(y);
-        vertices->push_back(z1);
-        return vertex_index;
-    }
-    if(axis == 2)
-    {
-        double z = mc_isovalue_interpolation(isovalue, f1, f2, z1, c2);
-        vertices->push_back(x1);
-        vertices->push_back(y1);
-        vertices->push_back(z);
-        return vertex_index;
-    }
-
-    // This should not happen.
-    return -1;
 }
 
 }

@@ -59,6 +59,23 @@ a `NumPy` array:
 Note that using a function to represent the volumetric data is **much** slower
 than using a `NumPy` array.
 
+## Parallel processing
+
+Both `mcubes.marching_cubes` and `mcubes.marching_cubes_func` accept a
+`num_threads` argument. The default, `0`, uses one thread per CPU core and `1`
+runs the algorithm on the calling thread only. The extracted mesh is the same
+for every value, so the argument only affects speed:
+
+```Python
+  >>> vertices, triangles = mcubes.marching_cubes(u, 0, num_threads=4)
+```
+
+The volume is swept in several passes (classify the cubes, prefix sum their
+vertex counts, place the vertices, and finally emit the triangles), and each
+pass runs in parallel. Vertices are owned by exactly one cube, which is what
+makes the passes independent of each other. See [PARALLEL.md](PARALLEL.md) for
+the algorithm, the implementation notes and the benchmarks.
+
 ## Smoothing binary arrays
 
 ![Overview](images/smoothing_overview.png "Overview of mcubes.smooth")
